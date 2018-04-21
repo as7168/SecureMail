@@ -35,3 +35,18 @@ https://www.datamotion.com/2016/08/gmail-tls-email-encryption-good-enough/
 2. The Enc-Dec system should be secure in case of data-modification attack, eavesdropping attack, and relay attack at the least.
 
 3. Attack model: The sender has gmail (TLS Encryption) but receiver might not have TLS encrypted. So when some private and senstive information is to be sent from sender to the receiver, it will be transmited as plaintext. Hence, we build this new Encryption-Decryption model to thwart this attack.
+
+
+
+## Industry apps to encrypt your email before sending it to the Google servers (if using gmail)
+https://www.computerworld.com/article/2473585/encryption/easily-encrypt-gmail.html
+
+1. Encrypted Communication: It uses AES-256
+
+2. Encipher.it: It uses AES-256
+
+3. Enlocked: It uses PGP encryption model https://www.enlocked.com/downloads/pr/enlocked-how-it-works-overview.pdf 
+
+PGP can be used to send messages confidentially. For this, PGP combines symmetric-key encryption and public-key encryption. The message is encrypted using a symmetric encryption algorithm, which requires a symmetric key. Each symmetric key is used only once and is also called a session key. The message and its session key are sent to the receiver. The session key must be sent to the receiver so they know how to decrypt the message, but to protect it during transmission it is encrypted with the receiver's public key. Only the private key belonging to the receiver can decrypt the session key.
+
+### PGP Encryption technique looks interesting and implements all that we learnt in course. I will try to implement this but take a look at Enlocked software. 
