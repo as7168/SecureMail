@@ -27,3 +27,13 @@ https://www.datamotion.com/2016/08/gmail-tls-email-encryption-good-enough/
  
 3. My task is to develop crypto technique to encrypt and decrypt the subject and the body right?
 ### yes
+
+
+## IDEA OF THE PROJECT:
+1. Create a Enc-Dec system which will take either the TLS encrypted plaintext (when both the parties have TLS encryption) or simply plaintext (when one or more parties do not have TLS encryption).
+
+2. The Enc-Dec system should be secure in case of data-modification attack, eavesdropping attack, and relay attack at the least.
+
+3. Attack model: The sender has gmail (TLS Encryption) but receiver might not have TLS encrypted. So when some private and senstive information is to be sent from sender to the receiver, it will be transmited as plaintext.
+
+4. Hence, we build this new Encryption-Decryption model to thwart this attack.
