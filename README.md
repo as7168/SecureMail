@@ -30,10 +30,8 @@ https://www.datamotion.com/2016/08/gmail-tls-email-encryption-good-enough/
 
 
 ## IDEA OF THE PROJECT:
-1. Create a Enc-Dec system which will take either the TLS encrypted plaintext (when both the parties have TLS encryption) or simply plaintext (when one or more parties do not have TLS encryption).
+1. Create a Enc-Dec system to encrypt your messages first before sending it. This way even if one party does not have TLS Encryption enabled, the message will still be encrypted using our system as opposed to transmitting just plaintext.
 
 2. The Enc-Dec system should be secure in case of data-modification attack, eavesdropping attack, and relay attack at the least.
 
-3. Attack model: The sender has gmail (TLS Encryption) but receiver might not have TLS encrypted. So when some private and senstive information is to be sent from sender to the receiver, it will be transmited as plaintext.
-
-4. Hence, we build this new Encryption-Decryption model to thwart this attack.
+3. Attack model: The sender has gmail (TLS Encryption) but receiver might not have TLS encrypted. So when some private and senstive information is to be sent from sender to the receiver, it will be transmited as plaintext. Hence, we build this new Encryption-Decryption model to thwart this attack.
