@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  
+  
+  
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  
+</head>
+
+<body>
+
+  <!--Google Font - Work Sans-->
+<link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,700' rel='stylesheet' type='text/css'>
+<div class="head">Welcome to Secure Mail</div>  
+<div class="container">
+  <div class="profile">
+    <button class="profile__avatar" id="toggleProfile">
+     <img src="http://ihito.net/wp-content/uploads/2016/10/Secure-Mail-300x212.png" alt="icon" /> 
+    </button>
+    <div class="profile__form">
+      <div class="profile__fields">
+        <form method="POST">
+        <div class="field">
+          <input type="email" class="input" name="uname" />
+          <label for="fieldUser" class="label">Username</label>
+        </div>
+        <div class="field">
+          <input type= "text" class="input" name="pswd" />
+          <label for="fieldPassword" class="label">Password</label>
+        </div>
+        <div class="profile__footer">
+          <button class="btn" type="submit">Login</button>
+        </div>
+        </form>
+      </div>
+     </div>
+  </div>
+</div>
+  
+  
+
+    <script  src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+
+
+
+</body>
+
+</html>
