@@ -50,3 +50,8 @@ https://www.computerworld.com/article/2473585/encryption/easily-encrypt-gmail.ht
 PGP can be used to send messages confidentially. For this, PGP combines symmetric-key encryption and public-key encryption. The message is encrypted using a symmetric encryption algorithm, which requires a symmetric key. Each symmetric key is used only once and is also called a session key. The message and its session key are sent to the receiver. The session key must be sent to the receiver so they know how to decrypt the message, but to protect it during transmission it is encrypted with the receiver's public key. Only the private key belonging to the receiver can decrypt the session key.
 
 ### PGP Encryption technique looks interesting and implements all that we learnt in course. I will try to implement this but take a look at Enlocked software. 
+
+https://github.com/nimishalimaye/nscrypto-cpp uses hybrid encryption scheme, wherein public-key encryption like Diffie Hellman is used for key generation and symmetri-keyc encryption like AES is used for data encapsulation. This could be a good starting point for the project.
+
+Other resources to look at when developing a secure cryptography algorithm: https://en.wikipedia.org/wiki/Pretty_Good_Privacy
+https://en.wikipedia.org/wiki/Hybrid_cryptosystem 
