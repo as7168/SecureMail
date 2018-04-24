@@ -57,7 +57,9 @@ def public_key_crypto_encrypt(key):
 	
 ## Combining the encryption functions for encrypting the email
 def EncryptedEmail():
-	message = b"Some email text"
+	with open("email.txt", "rb") as f:
+	#email = "Some email text"
+		message = f.read()
 	print("Message: ", message)
 	# Generate Public and Private keys
 	#_ = public_key_crypto_load()
@@ -113,5 +115,5 @@ def SecureEmail(option, ct, enc_key, nonce, encrypt):
 
 ## Fucntion calls to relevant functions	
 SecureEmail(0,None,None,None,None)
-#ct, enc_key, nonce, encrypt = SecureEmail(1,None,None,None,None)
-#SecureEmail(2,ct, enc_key, nonce, encrypt)
+ct, enc_key, nonce, encrypt = SecureEmail(1,None,None,None,None)
+SecureEmail(2,ct, enc_key, nonce, encrypt)
