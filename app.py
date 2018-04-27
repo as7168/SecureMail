@@ -11,14 +11,18 @@ server = smtplib.SMTP_SSL()
 @app.route('/login', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
 def login():
-	global server
 	if request.method == 'POST':
+		global server
 		#print 'inpost'
 		user = request.form['uname'].strip()
 		password = request.form['pswd'].strip()
 		mail_server, port = get_mail_server_and_port(user.split('@')[1])
 		if mail_server is None:
 			return redirect(url_for('login'))
+		try:
+			server.quit()
+		except:
+			pass
 		server.connect(mail_server, port)
 		try:
 			server.login(user, password)
@@ -32,8 +36,8 @@ def login():
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-	global server
 	if request.method == 'POST':
+		global server
 		#print 'in post'
 		if 'username' in session:
 			send_to = request.form['send_to'].strip()
@@ -41,16 +45,17 @@ def index():
 			subj = request.form['subject'].strip()
 			body = request.form['body'].strip()
 			send_to_list = send_to.split(",")
-			msg = MIMEText(body)
-			msg['Subject'] = subj
-			msg['From'] = request.args['user']
 			try:
 				server.ehlo()
 			except:
 				return 'Something went wrong! Try logging in again'
+			print send_to_list
 			for i in send_to_list:
+				msg = MIMEText(body)
+				msg['Subject'] = subj
+				msg['From'] = request.args['user']
 				msg['To'] = i
-				server.sendmail(request.args['user'], send_to, msg.as_string())
+				server.sendmail(request.args['user'], i, msg.as_string())
 			#print send_to, key, subj, body
 		else:
 			return redirect(url_for('login'))
@@ -72,7 +77,10 @@ def logout():
 		user1 = ''
 		password1 = ''
 		session.pop('username')
-		server.quit()
+		try:
+			server.quit()
+		except:
+			pass
 	#return 'You have logged out'
 	return redirect(url_for('login'))
 
