@@ -164,9 +164,9 @@ input:valid + .label {
 .btn {
   border: 0;
   font-size: 0.75rem;
-  height: 2.5rem;
-  line-height: 2.5rem;
-  padding: 0 1.5rem;
+  height: 2rem;
+  line-height: 2rem;
+  padding: 0 1rem;
   color: white;
   background: #8E49E8;
   text-transform: uppercase;
@@ -181,6 +181,30 @@ input:valid + .label {
 .btn:focus {
   background: #A678E2;
 }
+
+.btn3 {
+  position:relative;
+  float: right;
+  border: 0;
+  font-size: 0.75rem;
+  height: 2rem;
+  line-height: 2rem;
+  padding: 0 1rem;
+  color: white;
+  background: #8E49E8;
+  text-transform: uppercase;
+  border-radius: .25rem;
+  letter-spacing: .2em;
+  transition: background .2s;
+}
+.btn3:focus {
+  outline: 0;
+}
+.btn3:hover,
+.btn3:focus {
+  background: #A678E2;
+}
+
 
 
 /* Intro animation */
