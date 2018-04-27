@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Secure Mail</title>
+  
+  
+  
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/index_style.css') }}">
+
+  
+</head>
+
+<body>
+
+  <!--Google Font - Work Sans-->
+<link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,700' rel='stylesheet' type='text/css'> 
+<div class="container">
+  <div class="profile--open">
+    <button class="profile__avatar" id="toggleProfile">
+     <img src="http://ihito.net/wp-content/uploads/2016/10/Secure-Mail-300x212.png" alt="icon" /> 
+    </button>
+    <div class="profile__form">
+      <form action='/logout'>
+          <input type="submit" class="btn3" value="Logout" />
+      </form>
+      <h2 class='label'>Welcome {{user}}</h2>
+      <div class="profile__fields">
+        <form method="POST" validate-form>
+        <div class="field">
+          <input type="email" multiple class="input" name="send_to" required />
+          <label for="fieldUser" class="label">Recipients</label>
+        </div>
+        <div class="field">
+          <input type= "text" class="input" name="key" required />
+          <label for="fieldPassword" class="label">Encryption Key</label>
+        </div>
+        <div class="field">
+          <input type= "text" class="input" name="subject" required />
+          <label for="fieldPassword" class="label">Subject</label>
+        </div>
+        <div class="body_field">
+          <textarea class="body_input" name="body"></textarea>
+        </div>
+        <div class="profile__footer">
+          <button class="btn" type="submit">Send</button>
+        </div>
+      </div>
+     </div>
+  </div>
+</div>
+  
+  
+
+    <script  src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+
+
+
+</body>
+
+</html>
