@@ -126,7 +126,7 @@ def DecryptedEmail(enc_body):
 	return plaintext, dec_ver
 
 ## Main function for generation of key pairs, encryption, and decryption selection	
-def SecureEmail(option, encrypt=False, enc_body=None):
+def SecureEmail(option, encrypt=False, body=None):
 	if(option == 0): #generate public and private keys and store them locally
 		generate_public_private_key()
 	if (option == 1): # Encrypt
@@ -135,7 +135,7 @@ def SecureEmail(option, encrypt=False, enc_body=None):
 		file_out = open("enc_body.txt", "wb")
 		file_out.write(enc_body)
 		encrypt = True
-		return  enc_body
+		return enc_body
 	if(option == 2): #Decrypt
 		if encrypt == True:
 			with open("enc_body.txt", "rb") as f:
@@ -151,8 +151,9 @@ def SecureEmail(option, encrypt=False, enc_body=None):
 			print("Decrypted Plaintext: ",pt)
 		else:
 			print("Error: No encrypted file found")
-
+		return pt
 ## Function calls to relevant functions	
+message = b'see you at 9'
 SecureEmail(0)
-enc_body = SecureEmail(1)
+enc_body = SecureEmail(1, message)
 SecureEmail(2, True, enc_body)
