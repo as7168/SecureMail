@@ -8,8 +8,8 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 
 from Cryptodome.PublicKey import RSA
-from Cryptodome.Random import get_random_bytes
-from Cryptodome.Cipher import AES, PKCS1_OAEP
+#from Cryptodome.Random import get_random_bytes
+#from Cryptodome.Cipher import AES, PKCS1_OAEP
 
 ## Generate private and public keys using RSA
 def generate_private_key():
@@ -40,9 +40,12 @@ def public_key_crypto_load():
 def symmetric_key_crypto_encrypt(message):
 	data = message #"a secret message"
 	#aad = b"authenticated but unencrypted data"
-	key = AESGCM.generate_key(bit_length=128)
+	key = AESGCM.generate_key(bit_length=256)
 	aesgcm = AESGCM(key)
 	nonce = os.urandom(12)
+	#print("len of nonce: ",len(nonce))
+	#print(nonce)
+	#print((nonce))
 	ct = aesgcm.encrypt(nonce, data, None)
 	
 	return ct, key, nonce
@@ -58,7 +61,6 @@ def public_key_crypto_encrypt(key):
 ## Combining the encryption functions for encrypting the email
 def EncryptedEmail():
 	with open("email.txt", "rb") as f:
-	#email = "Some email text"
 		message = f.read()
 	print("Message: ", message)
 	# Generate Public and Private keys
@@ -70,15 +72,18 @@ def EncryptedEmail():
 	#Encrypt the key using RSA
 	enc_key = public_key_crypto_encrypt(key)
 	#print("enc_key: ", enc_key)
-	#print("Ciphertext: ",ct)
-	return ct, enc_key, nonce
+	#print("Ciphertext: ",len(ct))
+	#print("length of enc_key", len(enc_key))
+	enc_body = ct+enc_key+nonce
+	#print("enc_body: ", enc_body)
+	return enc_body
 
 	
 
 ## Decrypting the encrypted AES key using private key
 def public_key_crypto_decrypt(enc_key, private_key):
-	#print(enc_key)
-	dec_key = private_key.decrypt(enc_key,padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),algorithm=hashes.SHA256(),label=None))
+	#print(len(enc_key))
+	dec_key = private_key.decrypt(enc_key, padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()),algorithm=hashes.SHA256(),label=None))
 	return dec_key
 
 ## Decrypting the ciphertext using decrypted AES key
@@ -89,31 +94,40 @@ def symmetric_key_crypto_decrypt(dec_key, ct, nonce):
 	return plaintext
 	
 ## Combining the decryption functions for decrypting the email
-def DecryptedEmail(ct, enc_key, nonce):
+def DecryptedEmail(enc_body):
 	private_key = public_key_crypto_load()
-	dec_key = public_key_crypto_decrypt(enc_key, private_key)
-	plaintext = symmetric_key_crypto_decrypt(dec_key, ct,nonce)
+	nonce = enc_body[-12:]
+	enc_key_part = enc_body[-(256+12):-12]
+	ct_part = enc_body[:-(256+12)]
+	print(ct_part)
+	dec_key = public_key_crypto_decrypt(enc_key_part, private_key)
+	#nonce = os.urandom(12)
+	plaintext = symmetric_key_crypto_decrypt(dec_key, ct_part,nonce)
 
 
 ## Main function for generation of key pairs, encryption, and decryption selection	
-def SecureEmail(option, ct, enc_key, nonce, encrypt):
+def SecureEmail(option, encrypt, enc_body):
 	if(option == 0): #generate public and private keys and store them locally
 		generate_private_key()
 		_ = public_key_crypto_load()
 	if (option == 1): # Encrypt
-		ct, enc_key, nonce = EncryptedEmail()
+		enc_body = EncryptedEmail()
+		file_out = open("enc_body.txt", "wb")
+		file_out.write(enc_body)
 		encrypt = True
-		return ct, enc_key, nonce, encrypt
+		return encrypt, enc_body
 	if(option == 2): #Decrypt
 		if encrypt == True:
-			pt = DecryptedEmail(ct, enc_key, nonce)
+			with open("enc_body.txt", "rb") as f:
+				enc_body = f.read()
+			pt = DecryptedEmail(enc_body)
 		else:
 			print("Error: Encrypt first to decrypt")
 			
 #ct, enc_key, nonce = EncryptedEmail()		
 #DecryptedEmail(ct, enc_key, nonce)	
 
-## Fucntion calls to relevant functions	
-SecureEmail(0,None,None,None,None)
-ct, enc_key, nonce, encrypt = SecureEmail(1,None,None,None,None)
-SecureEmail(2,ct, enc_key, nonce, encrypt)
+## Function calls to relevant functions	
+#SecureEmail(0,None, None)
+encrypt, enc_body = SecureEmail(1,None, None)
+SecureEmail(2, encrypt, enc_body)
