@@ -55,3 +55,13 @@ https://github.com/nimishalimaye/nscrypto-cpp uses hybrid encryption scheme, whe
 
 Other resources to look at when developing a secure cryptography algorithm: https://en.wikipedia.org/wiki/Pretty_Good_Privacy
 https://en.wikipedia.org/wiki/Hybrid_cryptosystem 
+
+
+## Working of SecureEmail python code.
+1. The SecureEmail() function takes three arguments, option- generate RSA keys, Encrypt or decrypt; encrypt_flag: is encryption done before decrypting; and message(either plaintext or ciphertext)
+
+<see end of file for instances>
+ 
+ 2. The generate public_private_key() function stores the generated keys in files on system. First send out the public keys then start the encryption process.
+ 
+
