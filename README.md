@@ -27,3 +27,41 @@ https://www.datamotion.com/2016/08/gmail-tls-email-encryption-good-enough/
  
 3. My task is to develop crypto technique to encrypt and decrypt the subject and the body right?
 ### yes
+
+
+## IDEA OF THE PROJECT:
+1. Create a Enc-Dec system to encrypt your messages first before sending it. This way even if one party does not have TLS Encryption enabled, the message will still be encrypted using our system as opposed to transmitting just plaintext.
+
+2. The Enc-Dec system should be secure in case of data-modification attack, eavesdropping attack, and relay attack at the least.
+
+3. Attack model: The sender has gmail (TLS Encryption) but receiver might not have TLS encrypted. So when some private and senstive information is to be sent from sender to the receiver, it will be transmited as plaintext. Hence, we build this new Encryption-Decryption model to thwart this attack.
+
+
+
+## Industry apps to encrypt your email before sending it to the Google servers (if using gmail)
+https://www.computerworld.com/article/2473585/encryption/easily-encrypt-gmail.html
+
+1. Encrypted Communication: It uses AES-256
+
+2. Encipher.it: It uses AES-256
+
+3. Enlocked: It uses PGP encryption model https://www.enlocked.com/downloads/pr/enlocked-how-it-works-overview.pdf 
+
+PGP can be used to send messages confidentially. For this, PGP combines symmetric-key encryption and public-key encryption. The message is encrypted using a symmetric encryption algorithm, which requires a symmetric key. Each symmetric key is used only once and is also called a session key. The message and its session key are sent to the receiver. The session key must be sent to the receiver so they know how to decrypt the message, but to protect it during transmission it is encrypted with the receiver's public key. Only the private key belonging to the receiver can decrypt the session key.
+
+### PGP Encryption technique looks interesting and implements all that we learnt in course. I will try to implement this but take a look at Enlocked software. 
+
+https://github.com/nimishalimaye/nscrypto-cpp uses hybrid encryption scheme, wherein public-key encryption like Diffie Hellman is used for key generation and symmetri-keyc encryption like AES is used for data encapsulation. This could be a good starting point for the project.
+
+Other resources to look at when developing a secure cryptography algorithm: https://en.wikipedia.org/wiki/Pretty_Good_Privacy
+https://en.wikipedia.org/wiki/Hybrid_cryptosystem 
+
+
+## Working of SecureEmail python code.
+1. The SecureEmail() function takes three arguments, option- generate RSA keys, Encrypt or decrypt; encrypt_flag: is encryption done before decrypting; and message(either plaintext or ciphertext)
+
+<see end of file for instances>
+ 
+ 2. The generate public_private_key() function stores the generated keys in files on system. First send out the public keys then start the encryption process.
+ 
+
