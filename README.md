@@ -5,9 +5,10 @@ SecurEmails is a webUI which takes in unencrypted email body and encrypts it loc
 1. Cryptography part of the project uses [Cryptography](https://cryptography.io/en/latest/) python library. You can install it like:
 `pip install cryptography`, pip used is for python3.
 
-    -Install Python3
-    -sudo apt-get install python3-pip
-    
+'''
+Install Python3
+sudo apt-get install python3-pip
+'''    
 
 ## Working:
 - SecureEmail.py 
