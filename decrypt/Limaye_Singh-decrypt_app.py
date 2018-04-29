@@ -1,3 +1,5 @@
+__author__ = 'Amandeep'
+
 #!usr/bin/env python
 from random import randint
 from flask import Flask, request, render_template, url_for, redirect, session
