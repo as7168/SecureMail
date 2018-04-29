@@ -8,9 +8,9 @@ SecurEmails is a webUI which takes in unencrypted email body and encrypts it loc
 ```
 Install Python3
 sudo apt-get install python3-pip
+sudo apt-get install libssl-dev
 sudo python3 -m pip install cryptography --force-reinstall
 sudo python3 -m pip install flask
-sudo python3 -m pip install email
 ```
 To run the application extract the zip file, cd to that directory and execute the following commands
 ```
@@ -21,7 +21,7 @@ You will be able to access the app using a browser
 
 ## Working:
 - Before running the application, you have to make sure that private and public keys are in the application folder
-- A simple python script is provided to generate public and private key pairs for your convinience
+- A simple python script is provided to generate public and private key pairs for your convenience
 - Since public keys are available to everyone, we have assumed that the sender will have reciever's public key and the reciever has sender's public key
 - Make sure this exchange is done prior to running the application and the keys are stored in the application directory
 - SecureEmail.py 
