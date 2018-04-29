@@ -59,14 +59,16 @@ def encrypt(key, plaintext, associated_data):
 
 ## Encrypting the key from AES GCM using public key crypto method, RSA (receiver's public key)
 def public_key_crypto_encrypt(key):
+	# Encrypting first with Sender's private key
 	with open("public_key_receiver.pem", "rb") as key_file1:		
 		public_key = serialization.load_pem_public_key(key_file1.read(),backend=default_backend())
 	enc_key = public_key.encrypt(key, padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None))
-	#print(enc_key)
+
+	# Encrypting later with Receiver's public key
 	with open("private_key_sender.pem", "rb") as key_file2:		
 		private_key = serialization.load_pem_private_key(key_file2.read(),password = b'mypassword', backend=default_backend())
 	signature = private_key.sign(enc_key, padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH ), hashes.SHA256())
-	#print("sig: ",len(signature))
+	
 	return enc_key,signature
 	
 ## Combining the encryption functions for encrypting the email
@@ -81,6 +83,8 @@ def EncryptedEmail(message):
 	#Encrypt the key using RSA
 	enc_key, signature = public_key_crypto_encrypt(key)
 	enc_body = enc_key+signature+iv+tag+ciphertext
+	#print("enc_body: ", enc_body)
+	#print("ciphertext: ",ciphertext)
 	return enc_body
 
 ## Decrypting the encrypted AES key using private key
@@ -107,6 +111,23 @@ def decrypt(key, associated_data, iv, ciphertext, tag):
     # Decryption gets us the authenticated plaintext.
     # If the tag does not match an InvalidTag exception will be raised.
     return decryptor.update(ciphertext) + decryptor.finalize()
+
+def attack(enc_body):
+	#private_key = public_key_crypto_load()
+	with open("public_key_sender.pem", "rb") as key_file1:		
+		public_key = serialization.load_pem_public_key(key_file1.read(),backend=default_backend())
+	with open("private_key_sender1.pem", "rb") as key_file2:
+		private_key1 = serialization.load_pem_private_key( key_file2.read(), password=b'mypassword', backend=default_backend())
+	
+	enc_key_part = enc_body[:256]
+	signature = enc_body[256:512]
+	iv = enc_body[256+256:268+256]
+	tag = enc_body[268+256:284+256]
+	ct_part = enc_body[284+256:]
+
+	signature = private_key1.sign(enc_key_part, padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH ), hashes.SHA256())
+	enc_body = enc_key_part+signature+iv+tag+ct_part
+	return enc_body
 
 ## Combining the decryption functions for decrypting the email
 def DecryptedEmail(enc_body):
@@ -135,25 +156,31 @@ def SecureEmail(option, encrypt=False, body=None):
 		file_out = open("enc_body.txt", "wb")
 		file_out.write(enc_body)
 		encrypt = True
-		return enc_body
+		return encrypt, enc_body
 	if(option == 2): #Decrypt
 		if encrypt == True:
 			with open("enc_body.txt", "rb") as f:
 				enc_body = f.read()
 
-			#enc_body = b",n\xa1\\X\xb7\xd8\x01\xbd\x99\xdd\xf0\xed)\xd0\xf2\xb2@\xfc\x8eG\xd1\xd5\xd9\xdc}+B;\xca\x80\xe9\xa27)i\x8dN1{\x173t\x91\xa9N\xf2\xb6\xe7&\t\xbd\xc1\xcb+\x03C\xcb\x02^\xf75#@o\xa8\x9dj=H\xef>\x9aa%)0\xd7\xd5\x0c\xbb0\r\xe2\x9deEC\x90\xf4\xa00\xdc>\xcb\xfa$\xa5\xb9\xd5\x0c\xcf;\xff\xf8\xab>[n\x15\xcc\xc8\xca\xb36\xe2\xef\xae\xa0\xd8\xd4f\x0c=\xcb\xb4tE\xac\xd5\x82t\xdc\x0c\x86\xa1\x1c\x0c\xdc\xbfK\x82[\xceK~\x85;\xd2\xc5\xb5\xebP-#\xee\xb4\x86K\xcb\xdc\xf4\xb2\x07BM\x81$\x1a\xef\xfc\x03\xa3FzT+\x7f\xca\x0e(>\x91\x04n\xcb\xe61\xc9sw\xb3\x97ql\xb6\x08\xec\xbd\x1a\xaf\xaeF~\x84W\xbe.\xa1\x82\xeb\x1d\x11\xbc\xad\xc9\xa9,\x9d\xed\xaa\xd2\x9b\x11Q/\x91~\xf3\xca\xd8w\xdcMg\xfa\xe8\xdaGY\x83\xae1\r\x01b\xe1\xe2VUN\x80\xb5\xc28\xb5\xde\xbcq\xffa\xc3'\xebo\x8a\xf3*]\xa7\xdfJ\xabX.\x93\xbf\xb2R\x07\x1eC[\x06\xf4\xe3@\xbc\xaa\xb0\x8b\x91=\xc3\xde\xfb"
+			#enc_body =   b'\x194\x14\xd8\x8a\xc1\xe2 \x83\xa5\xda@\x1a4\xc9\x84\xee&\xb9/\xe20\x05\n \x18R\xf8p\xcf\xa6r|\xd4e\xed\xbd\xb4\x81\xb3[0$\xf1\xa6r\xacW:\xfc\xd50\xab\x1bJ\x8bs\x91\x98\xe4c\x9af\xfe\x87\x99N\x8b\xc3\x99\xae\x92\xd0T\x0eE\xbb\xed\xfa\x1d\x03\xfa\xf9\xc1\x92\xe0"k\xf8g\xd9e\xcaH\x14\xa6\xca\x1c\n$m\xb2j\xc6\xec\xe3~\xb9B\xb4\x89\xc5\xa9\x04\x08\xbd\xe2\x88\xff\xd2\x87\xb3\xc8^\xa0\x93(!o\xaaM}g\x81*\xe3\x88\xdf\xe4\xb43\xcf\xefT\xbac\xdd\xdf\xc5g\xa1>m\xfa\xcc\x95\x14B\xde3@\xa5\xf163\xdc\xab\xafV?\x9fU\xc5\x95\x9b\x0fC\x10f\xee\xb7\x85x\x16\xb5\x15\xba\xb9\xa9/:\x18Y\xcb\x12\xc5eIy\xdf\x86\t\x18\xad\xf13x\xa8\xb0\xda\xf1\x02rI\x01/~1\xe2h\x8a\xfd\xb7\xcd\xeb\xb7\xd2\xc6\x07\x90\xdc\x9f8M\x11\xfc\x9d\xca\x97J/\x9e\x0e\x9d\x03o97aF\x8a\xe9g\xb6}\x12!\xb5;\xd8&8i\xfc4\xb7\xf8\xed\x1b\xb8\xb9\n\xe8\xe7\x9c3\xe7\xb7\x98l\xe0\x8a)O\xd9\x98w^\xa0<3\x85\xb5@\xe1\x81\x05\xaa\x0fUd\xcb\x90\x1e\xd7+\x83;Q\xa3%N\xfa\xa1\xf7G\xe2Y,\xd0\xfd8\xe3\x0c2k\xa9qJ%\xa8\x0ex\x85A%\xb9&Z\x80U\x9a\xd3\r\x0bu\xa9L\x9a\xfb\xb8\xbd\x8d\x9d\x06A^k\xc6|\xbb\x12E\xec\xb1/\xef\xc2\xc2>,\x05*M\xcc\x19\xa26<\xed\xfa\xe2\xb1\xcd\xdbD\xdc\xd0\x0f,M#K\x87\xf0.@Np\x13\xc9\xab\xa84\xd9,q\xd7\x9f\xb5\xa0\xd5\x04\x8e\x04\x91\xc5\xe7j\x1e3IX\x155\x03\x8cB\x16T\x13"W\x03\x1e\x03f<\xf9-\x94\x16\xc6p\xab%\xb0u\xbb\xad\xa81\xbe|\xbe\x80v\x8a*\x89&N|\xd54\x8b\xfd)\xcd)\x98\xf4\xe2\x0b\xc5V_\xff\xbbr0\x8db\x9dck\xd3v\xcf\x92\xb9\x00\xfaw\xc8D\xdfH\xa0u\xe1l\xaa\xd0N\xb7p\x9cCP\xe5\x8d\x1bkd@\x91\x87Xb\xe6\xfe\xdb\xa9\xab\x04\xb1\xaec\x82X\xc5\xee\xad$ Uk\xb2\xe7\xf5w\x90\x046\xa5v\xfcnm\xc9>'
 			pt, dec_Ver = DecryptedEmail(enc_body)
 			print()
-			# if dec_Ver:
-			# 	print("Sender Verfied!")
-			# else: 
-			# 	print("Sender Not Verfied!")
 			print("Decrypted Plaintext: ",pt)
 		else:
 			print("Error: No encrypted file found")
 		return pt
+	if(option==3): # Attack against non-repudiation
+		if encrypt == True:
+			print("entered")
+			with open("enc_body.txt", "rb") as f:
+				enc_body = f.read()
+			enc_body1 = attack(enc_body)
+			pt, dec_Ver = DecryptedEmail(enc_body1)
+			print()
+			print("Decrypted Plaintext: ",pt)
 ## Function calls to relevant functions	
 message = b'see you at 9'
 SecureEmail(0)
-enc_body = SecureEmail(1, message)
-SecureEmail(2, True, enc_body)
+encrypt, enc_body = SecureEmail(1, message)
+SecureEmail(2, encrypt, enc_body)
+#SecureEmail(3, encrypt, enc_body)
