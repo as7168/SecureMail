@@ -9,10 +9,8 @@ SecurEmails is a webUI which takes in unencrypted email body and encrypts it loc
 Install Python3
 sudo apt-get install python3-pip
 sudo apt-get install libssl-dev
-sudo python3 -m pip install --upgrade setuptools
 sudo python3 -m pip install cryptography --force-reinstall
 sudo python3 -m pip install flask
-sudo python3 -m pip install email
 ```
 To run the application extract the zip file, cd to that directory and execute the following commands
 ```
