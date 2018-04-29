@@ -9,8 +9,10 @@ SecurEmails is a webUI which takes in unencrypted email body and encrypts it loc
 - SecureEmail.py 
 
 1. The SecureEmail_func() function takes three arguments, 
---option: generate RSA keys, Encrypt, or decrypt; 
---encrypt_flag: is encryption done before decrypting; 
---message: plaintext or ciphertext
+   -option: generate RSA keys, Encrypt, or decrypt; 
+ 
+   -encrypt_flag: is encryption done before decrypting; 
+   
+   -message: plaintext or ciphertext
  
  2. The generate_public_private_key() function stores the generated keys in files on system. Before starting the encryption, exchange the public keys.
