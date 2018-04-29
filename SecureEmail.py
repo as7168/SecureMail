@@ -38,6 +38,7 @@ def generate_public_private_key():
 ## Encrypting the plaintext message using AES GCM crypto method
 def encrypt(key, plaintext, associated_data):
     # Generate a random 96-bit IV.
+    # print("enter0")
     iv = os.urandom(12)
     # print("enter1")
     # Construct an AES-GCM Cipher object with the given key and a
@@ -79,8 +80,12 @@ def EncryptedEmail(message):
 	print("Message: ", message)
 	aad = b"authenticated but not encrypted data"
 	key = AESGCM.generate_key(bit_length=256)
+	# print("entered")
+	# print(key)
+	# print(message)
+	# print(aad)
 	iv, ciphertext, tag = encrypt(key, message, aad)
-
+	# print("exit")
 	#Encrypt the key using RSA
 	enc_key, signature = public_key_crypto_encrypt(key)
 	enc_body = enc_key+signature+iv+tag+ciphertext
@@ -148,7 +153,7 @@ def DecryptedEmail(enc_body):
 	return plaintext, dec_ver
 
 ## Main function for generation of key pairs, encryption, and decryption selection	
-def SecureEmail(option, encrypt=False, message=None):
+def SecureEmail_func(option, encrypt=False, message=None):
 	if(option == 0): #generate public and private keys and store them locally
 		generate_public_private_key()
 	if (option == 1): # Encrypt
@@ -172,7 +177,7 @@ def SecureEmail(option, encrypt=False, message=None):
 		return pt
 	if(option==3): # Attack against non-repudiation
 		if encrypt == True:
-			print("entered")
+			#print("entered")
 			with open("enc_body.txt", "rb") as f:
 				enc_body = f.read()
 			enc_body1 = attack(enc_body)
@@ -180,8 +185,13 @@ def SecureEmail(option, encrypt=False, message=None):
 			print()
 			print("Decrypted Plaintext: ",pt)
 ## Function calls to relevant functions	
-# message = b'see you at 9'
-# SecureEmail(0)
-# encrypt, enc_body = SecureEmail(1,False, message)
-# SecureEmail(2, encrypt, enc_body)
-# SecureEmail(3, encrypt, enc_body)
+message = b'see you at 8'
+message1 = b'see you at 9'
+
+SecureEmail_func(0)
+encrypt_flag, enc_body = SecureEmail_func(1,False, message)
+SecureEmail_func(2, encrypt_flag, enc_body)
+SecureEmail_func(0)
+encrypt_flag, enc_body = SecureEmail_func(1,False, message1)
+SecureEmail_func(2, encrypt_flag, enc_body)
+# SecureEmail_func(3, encrypt, enc_body)
