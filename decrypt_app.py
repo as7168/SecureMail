@@ -1,12 +1,6 @@
 #!usr/bin/env python
 from random import randint
 from flask import Flask, request, render_template, url_for, redirect, session
-import smtplib
-from email.mime.text import MIMEText
-
-import time
-from itertools import chain
-import email
 import imaplib
 
 app = Flask(__name__, template_folder='templates')
@@ -53,7 +47,7 @@ def index():
 			print result
 			print data
 			if result == 'OK':
-				return redirect(url_for('view', data=data[0]))
+				return redirect(url_for('views', data=data[0]))
 			else:
 				return render_template('decrypt_index.html', user=request.args['user'])
 			#print send_to, key, subj, body
@@ -70,17 +64,33 @@ def index():
 
 	return redirect(url_for('login'))
 
+@app.route('/views', methods=['GET', 'POST'])
+def views():
+	if 'username' in session:
+		uids = request.args['data'].split()
+		if request.method == 'POST':
+			print request.form['submit']
+			return redirect(url_for('view', uid=request.form['submit']))
+			
+		return render_template('views.html', user = session['username'], uids=uids)
+	else:
+		return redirect(url_for('login'))
+
+
 @app.route('/view', methods=['GET'])
 def view():
 	#decryt data here
-	global server
-	print 'in view'
-	uids = request.args['data']
-	print 'before fetching'
-	result, data = server.uid('fetch', int(uids.split()[0]), '(RFC822)')
-	if result == 'OK':
-		#print data
-		return data[0]
+	if 'username' in session:
+		global server
+		uid = request.args['uid']
+		print uid
+		result, data = server.uid('fetch', int(uid), '(RFC822)')
+		if result == 'OK':
+			#print data
+			return data[0]
+	else:
+		return redirect(url_for('login'))
+
 
 @app.route('/logout', methods=['GET'])
 def logout():

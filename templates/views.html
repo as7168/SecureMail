@@ -26,26 +26,15 @@
           <input type="submit" class="btn3" value="Logout" />
       </form>
       <h2 class='label'>Welcome {{user}}</h2>
+      <h3 class='label'>You have the following emails:</h2>
       <div class="profile__fields">
         <form method="POST" validate-form>
-        <div class="field">
-          <input type="email" multiple class="input" name="send_to" required />
-          <label for="fieldUser" class="label">Recipients</label>
-        </div>
-        <div class="field">
-          <input type= "text" class="input" name="key" required />
-          <label for="fieldPassword" class="label">Encryption Key</label>
-        </div>
-        <div class="field">
-          <input type= "text" class="input" name="subject" required />
-          <label for="fieldPassword" class="label">Subject</label>
-        </div>
-        <div class="body_field">
-          <textarea class="body_input" name="body"></textarea>
-        </div>
+        <tbody>
+        {% for uid in uids %}
         <div class="profile__footer">
-          <button class="btn" type="submit">Send</button>
+          <button class="btn" type="submit" name='submit' value={{uid}}>{{uid}}</button>
         </div>
+        {% endfor %}
       </div>
      </div>
   </div>
