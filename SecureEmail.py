@@ -157,6 +157,7 @@ def SecureEmail_func(option, encrypt=False, message=None):
 			print()
 			print("Decrypted Plaintext: ",pt)
 ## Function calls to relevant functions	
+
 # message = b'see you at 8'
 # message1 = b'see you at 9'
 
