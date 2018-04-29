@@ -39,7 +39,7 @@ def generate_public_private_key():
 def encrypt(key, plaintext, associated_data):
     # Generate a random 96-bit IV.
     iv = os.urandom(12)
-
+    # print("enter1")
     # Construct an AES-GCM Cipher object with the given key and a
     # randomly generated IV.
     encryptor = Cipher(
@@ -47,14 +47,15 @@ def encrypt(key, plaintext, associated_data):
         modes.GCM(iv),
         backend=default_backend()
     ).encryptor()
-
+    # print("enter2")
     # associated_data will be authenticated but not encrypted,
     # it must also be passed in on decryption.
     encryptor.authenticate_additional_data(associated_data)
-
+    # print("enter3")
     # Encrypt the plaintext and get the associated ciphertext.
     # GCM does not require padding.
     ciphertext = encryptor.update(plaintext) + encryptor.finalize()   
+    # print("enter4")
     return (iv, ciphertext, encryptor.tag)
 
 ## Encrypting the key from AES GCM using public key crypto method, RSA (receiver's public key)
@@ -147,7 +148,7 @@ def DecryptedEmail(enc_body):
 	return plaintext, dec_ver
 
 ## Main function for generation of key pairs, encryption, and decryption selection	
-def SecureEmail(option, encrypt=False, body=None):
+def SecureEmail(option, encrypt=False, message=None):
 	if(option == 0): #generate public and private keys and store them locally
 		generate_public_private_key()
 	if (option == 1): # Encrypt
@@ -179,8 +180,8 @@ def SecureEmail(option, encrypt=False, body=None):
 			print()
 			print("Decrypted Plaintext: ",pt)
 ## Function calls to relevant functions	
-message = b'see you at 9'
-SecureEmail(0)
-encrypt, enc_body = SecureEmail(1, message)
-SecureEmail(2, encrypt, enc_body)
-#SecureEmail(3, encrypt, enc_body)
+# message = b'see you at 9'
+# SecureEmail(0)
+# encrypt, enc_body = SecureEmail(1,False, message)
+# SecureEmail(2, encrypt, enc_body)
+# SecureEmail(3, encrypt, enc_body)
