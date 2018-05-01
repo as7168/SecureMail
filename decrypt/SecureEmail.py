@@ -1,3 +1,5 @@
+__author__ = 'Nimisha'
+
 ## importing libraries
 import os
 from cryptography.hazmat.backends import default_backend
