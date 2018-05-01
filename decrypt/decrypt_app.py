@@ -107,19 +107,34 @@ def view():
 		print (uid)
 		# Fetch the email with uid
 		result, data = server.uid('fetch', uid, '(RFC822)')
-		#print(data)
+		print(data)
 		# If retrieved the data successfully
 		if result == 'OK':
+			if session['username'].split('@')[1] == 'gmail.com':
 			# Parsing data
-			string_to_search = b'.com\r\nTo: '+session['username'].encode()
-			ind = data[0][1].find(string_to_search)+len(string_to_search)
-			# Get the ciphertext from the email
-			ciphertext = data[0][1][ind:].strip()
-			# Decrypt the email
-			plaintext = SecureEmail_func(2, True, base64.b64decode(ciphertext))
-			# Bytes to string
-			text = plaintext.decode()
-			return render_template('view.html', body = text, user=session['username'])
+				string_to_search = b'.com\r\nTo: '+session['username'].encode()
+				ind = data[0][1].find(string_to_search)+len(string_to_search)
+				# Get the ciphertext from the email
+				ciphertext = data[0][1][ind:].strip()
+				# Decrypt the email
+				plaintext = SecureEmail_func(2, True, base64.b64decode(ciphertext))
+				# Bytes to string
+				text = plaintext.decode()
+				return render_template('view.html', body = text, user=session['username'])
+			elif session['username'].split('@')[1] == 'yahoo.com':
+				with open('data.txt', 'w') as of:
+					of.write(str(data[0][1]))
+				string_to_search = b'To: '+session['username'].encode()+b'\nContent-Length'
+				new_ind = data[0][1].find(string_to_search)
+				new_data = data[0][1][new_ind:]
+				ind = new_data.find(b'\n\n')
+				ciphertext = new_data[ind:].strip()
+				plaintext = SecureEmail_func(2, True, base64.b64decode(ciphertext))
+				# Bytes to string
+				text = plaintext.decode()
+				return render_template('view.html', body = text, user=session['username'])
+
+
 	else:
 		return redirect(url_for('login'))
 
